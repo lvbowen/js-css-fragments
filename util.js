@@ -83,3 +83,32 @@ export const dateFtt = function (date,fmt){
   fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
   return fmt;
 }
+
+/**
+ * 中文根据拼音排序 （localeCompare 比较的是字符串）
+ * @param { Array } arr - 数组
+ * @param { String } key - 若数组元素是对象，对象的属性名
+ */
+const pySegSort = (arr,key) => {
+  if (!String.prototype.localeCompare)
+    return null;
+
+  var letters = "*ABCDEFGHJKLMNOPQRSTWXYZ".split('');
+  var zh = "阿八嚓哒妸发旮哈讥咔垃马拏噢妑七呥扨它穵夕丫匝".split('');
+
+  var segs = [];
+  var curr;
+  letters.forEach(function (item, i) {
+    curr = { letter: item, data: [] };
+    arr.forEach(function (item2) {
+      let target = key ? item2[key] : item2;
+      if ((!zh[i - 1] || zh[i - 1].localeCompare(target, 'zh') <= 0) && target.localeCompare(zh[i], 'zh') == -1) {
+        curr.data.push(item2);
+      }
+    });
+    if (curr.data.length) {
+      segs.push(curr);
+    }
+  });
+  return segs;
+}
