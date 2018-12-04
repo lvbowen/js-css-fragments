@@ -169,3 +169,67 @@ export function clearCookie(name) {
   setCookie(name, "", -1);
 }
 
+/**
+ * 60s倒计时
+ * @param  {string}   target   目标dom
+ * @param  {Function} callback 回调
+ * @return {Function}          倒计时
+ */
+export function countDown(target, callback) {
+  let gapTime = 60;
+  let counting = setInterval(function() {
+    if (gapTime <= 0) {
+      target.innerHTML = "重新发送";
+      clearInterval(counting);
+      if (callback) {
+        callback();
+      }
+      return;
+    } else {
+      target.innerHTML = gapTime + "s";
+      gapTime--;
+    }
+  }, 1000);
+  return counting;
+}
+
+/**
+ * 1-60分钟倒计时
+ * @param  {string}   target   目标dom
+ * @param  {Number}   tSec     总秒数
+ * @param  {Function} callback 结束之后的回调
+ * @return {[type]}            [description]
+ */
+export function minCountDown(target, tSec, callback) {
+  let t = setInterval(() => {
+    if (tSec <= 0) {
+      clearInterval(t);
+      target.innerHTML = '00:00:00';
+      if (callback && typeof callback === 'function') {
+        callback();
+      }
+      return;
+    } else {
+      let m = parseInt(tSec / 60);
+      let s = tSec % 60;
+      m < 10 ? m = '0' + m : '';
+      s < 10 ? s = '0' + s : '';
+      target.innerHTML = '00:' + m + ':' + s;
+      tSec--;
+    }
+  }, 1000)
+}
+
+/**
+ * 超过一千用k来表示
+ * @param  {Number} num  点赞数
+ * @return {String}      处理后的点赞数
+ */
+export function processNumber(num) {
+  if (num >= 1000) {
+    let numberThousand = Math.round(Math.round(num / 10) / 10) / 10;
+    return numberThousand + 'k';
+  } else {
+    return num;
+  }
+}
