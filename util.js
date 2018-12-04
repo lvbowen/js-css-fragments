@@ -111,4 +111,61 @@ const pySegSort = (arr,key) => {
     }
   });
   return segs;
+}  
+  
+/**
+ * 创建FormData
+ * @param {Object} obj 对象
+ * @return {Object}  formdata object
+ */
+function(obj){
+  var bodyFormData = new FormData();
+  if(obj && obj instanceof Object){
+    Object.keys(obj).forEach((key) => {
+        bodyFormData.append(key, obj[key]);
+    })
+   }
+   return bodyFormData;
 }
+
+//获取url上?后参数
+export const getQueryVariable = (variable) => {
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+    }
+    return(false);
+}
+
+//设置cookie
+export function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  var expires = "expires=" + d.toUTCString();
+  if (exdays == -1) {
+    document.cookie = cname + "=" + cvalue + "; " + expires + ";domain=.laozihaojia.com; path=/;";
+  } else {
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+  }
+}
+
+//获取cookie
+export function getCookie(cname) {
+  var strCookie = document.cookie;
+  var arrCookie = strCookie.split("; ");
+  for(var i = 0; i < arrCookie.length; i++){
+      var arr = arrCookie[i].split("=");
+      if(cookieName == arr[0]){
+          return arr[1];
+      }
+  }
+  return "";
+}
+
+//清除cookie
+export function clearCookie(name) {
+  setCookie(name, "", -1);
+}
+
