@@ -13,6 +13,15 @@ export const mSystem = () => {
 }
 
 /**
+ * [判断手机联网状态]
+ *
+ * @return {Boolean} [有网络：true，无网络：false]
+ */
+export function isOnline() {
+  return navigator.onLine;
+}
+
+/**
  * 微信登录
  */
 export function weixinLogin() {
