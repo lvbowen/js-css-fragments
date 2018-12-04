@@ -221,7 +221,7 @@ export function minCountDown(target, tSec, callback) {
 }
 
 /**
- * 超过一千用k来表示
+ * 超过一千用k来表示，保留一位小数
  * @param  {Number} num  点赞数
  * @return {String}      处理后的点赞数
  */
