@@ -139,6 +139,21 @@ export const getQueryVariable = (variable) => {
     return(false);
 }
 
+// 对象转url qs参数(序列化)
+export const obj2param = (obj) => {
+  let val;
+  const result = [];
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      val = `${obj[key]}`;
+      const frag = `${key}=${encodeURIComponent(val)}`;
+      result.push(frag);
+    }
+  }
+
+  return result.join('&');
+}
+
 //设置cookie
 export function setCookie(cname, cvalue, exdays) {
   var d = new Date();
