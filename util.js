@@ -248,3 +248,96 @@ export function processNumber(num) {
     return num;
   }
 }
+
+
+/**
+ * 导出二进制流文件
+ * @param {res} 返回的文件流
+ * @param {name} 下载下来的文件名
+ */
+export const switchBlobToFile = (res, name = '') => {
+  if (!res) return;
+  const blob = new Blob([res], { type: res.type });
+  const elink = document.createElement('a');
+  const href = window.URL.createObjectURL(blob);
+  elink.href = href;
+  elink.download = name;
+  elink.style.display = 'none';
+  document.body.appendChild(elink);
+  elink.click();
+  document.body.removeChild(elink);
+  // 释放blob对象
+  window.URL.revokeObjectURL(href);
+};
+
+/**
+ * 合并单元格(单列)
+ * @param {*} data 数组数据
+ * @param {*} dataIndex 表格列的 key
+ * @returns
+ */
+export const mergeTableCell = (data, dataIndex) => {
+  return data
+    .reduce((result, item) => {
+      if (result.indexOf(item[dataIndex]) < 0) {
+        result.push(item[dataIndex]);
+      }
+      return result;
+    }, [])
+    .reduce((result, name) => {
+      const children = data.filter((item) => item[dataIndex] === name);
+      result = result.concat(
+        children.map((item, index) => ({
+          ...item,
+          [dataIndex + 'RowSpan']: index === 0 ? children.length : 0,
+        })),
+      );
+      return result;
+    }, []);
+};
+
+/**
+ * 合并单元格(多列，存在父子关系)
+ * @param {Array} arr 数组数据
+ * @param {*}  rest 表格列的 key, 多个逗号隔开
+ * @returns
+ */
+export const mergeMultiTableCell = (arr, ...rest) => {
+  rest.forEach((r, rx) => {
+    if (rx === 0) {
+      const exist = [];
+      arr.forEach((item, index) => {
+        if (exist.includes(item[r])) {
+          item[[r + 'RowSpan']] = 0;
+        } else {
+          exist.push(item[r]);
+          item['tableIndex'] = exist.length;
+          const filterArr = arr.filter((f) => f[r] === item[r]);
+          item[[r + 'RowSpan']] = filterArr.length;
+        }
+      });
+    } else {
+      const exist = [];
+      arr.forEach((item, index) => {
+        let str = '';
+        for (var a = 0; a <= rx; a++) {
+          str += `${item[rest[a]]}.`;
+        }
+        if (exist.includes(str)) {
+          item[[r + 'RowSpan']] = 0;
+        } else {
+          exist.push(str);
+          const filterArr = arr.filter((f) => {
+            let st = '';
+            for (var a = 0; a <= rx; a++) {
+              st += `${f[rest[a]]}.`;
+            }
+            return st === str;
+          });
+          item[[r + 'RowSpan']] = filterArr.length;
+        }
+      });
+    }
+  });
+  return arr;
+};
