@@ -341,3 +341,23 @@ export const mergeMultiTableCell = (arr, ...rest) => {
   });
   return arr;
 };
+
+/**
+ * 获取日、周、月、年开始时间和结束时间（时间戳）
+ * m: 是 moment 类型
+ */
+export const getStartEndTimestamp = {
+  'day': (m) => {
+    return [m.startOf('day').valueOf(), m.endOf('day').valueOf()];
+  },
+  'week': (m) => {
+    return [m.startOf('week').valueOf(), m.endOf('week').valueOf()];
+  },
+  'month': (m) => {
+    return [m.startOf('month').valueOf(), m.endOf('month').valueOf()];
+  },
+  'year': (m) => {
+    return [m.startOf('year').valueOf(), m.endOf('year').valueOf()];
+  },
+}
+
